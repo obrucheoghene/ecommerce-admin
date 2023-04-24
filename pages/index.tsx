@@ -20,5 +20,5 @@ export default function Home() {
       </div>
     );
   }
-  return <div>Logged in {session.user?.email}</div>;
+  return <div className=" bg-blue-900 min-h-screen">{session.user?.email}</div>;
 }
