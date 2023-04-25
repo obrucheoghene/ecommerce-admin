@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { IconType } from 'react-icons';
 
-interface SidebarItemType {
+interface SidebarItemProps {
   label: string;
   href: string;
   isActive?: boolean;
   icon: IconType;
 }
-const SidebarItem: React.FC<SidebarItemType> = ({
+const SidebarItem: React.FC<SidebarItemProps> = ({
   label,
   href,
   isActive = false,
