@@ -9,29 +9,35 @@ import {
 } from 'react-icons/ai';
 import SidebarItem from './SidebarItem';
 import SidebarLogo from './SidebarLogo';
+import { useRouter } from 'next/router';
 
 const Sidebar = () => {
+  const router = useRouter();
+
   const items = [
     {
       label: 'Dashboard',
       href: '/',
-      isActive: true,
+      isActive: router.pathname === '/' ? true : false,
       icon: AiOutlineDashboard,
     },
     {
       label: 'Products',
       href: '/products',
+      isActive: router.pathname === '/products' ? true : false,
       icon: AiOutlineShoppingCart,
     },
 
     {
       label: 'Orders',
       href: '/orders',
+      isActive: router.pathname === '/orders' ? true : false,
       icon: AiOutlineUnorderedList,
     },
     {
       label: 'Settings',
       href: '/settings',
+      isActive: router.pathname === '/settings' ? true : false,
       icon: AiOutlineSetting,
     },
   ];
