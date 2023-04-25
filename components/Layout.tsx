@@ -23,7 +23,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className=" bg-blue-900 min-h-screen flex ">
       <Sidebar />
-      <div className=" bg-white flex-grow ml-0 m-2 rounded-lg text-black ">
+      <div className=" bg-white flex-grow ml-0 m-2 rounded-lg text-black p-4">
         {children}
       </div>
     </div>
