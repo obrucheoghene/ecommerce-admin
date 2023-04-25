@@ -15,7 +15,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 }) => {
   const inActiveLink = 'flex flex-row items-center space-x-2 p-1';
   const activeLink =
-    inActiveLink + ' bg-white text-blue-900 rounded rounded-r-none';
+    inActiveLink + ' bg-white text-blue-900 rounded-lg rounded-r-none';
   return (
     <Link href={href} className={isActive ? activeLink : inActiveLink}>
       <Icon size={28} />
