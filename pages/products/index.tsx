@@ -27,7 +27,7 @@ const Products = () => {
             <tr key={product._id}>
               <td>{product.name}</td>
               <td>
-                <Link href={`/api/products/${product._id}`}>
+                <Link href={`/products/${product._id}`}>
                   <AiFillEdit />
                   <span>Edit</span>
                 </Link>
