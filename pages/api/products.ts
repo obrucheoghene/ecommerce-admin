@@ -13,7 +13,23 @@ export default async function handler(
   if (method === 'POST') {
     const { name, price, description } = req.body;
 
-    const product = await Product.create({ name, price, description });
-    res.status(200).json(product);
+    try {
+      const product = await Product.create({ name, price, description });
+      res.status(200).json(product);
+    } catch (error) {
+      console.log(error);
+      res.status(400).end();
+    }
+  }
+
+  if (method === 'GET') {
+    try {
+      const products = await Product.find({});
+
+      res.status(200).json(products);
+    } catch (error) {
+      console.log(error);
+      res.status(400).end();
+    }
   }
 }
