@@ -1,14 +1,38 @@
 import Layout from '@/components/Layout';
 import useProducts from '@/hooks/useProducts';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React from 'react';
-import { AiFillEdit, AiOutlineDelete } from 'react-icons/ai';
-
+import {
+  AiFillEdit,
+  AiFillExclamationCircle,
+  AiOutlineDelete,
+} from 'react-icons/ai';
+import { Modal } from 'antd';
+import axios from 'axios';
 const Products = () => {
-  const { data: fetchedProducts, isLoading, error, mutate } = useProducts();
+  const { data: fetchedProducts, mutate } = useProducts();
+  const { confirm } = Modal;
 
-  console.log(fetchedProducts);
+  const showDeleteConfirm = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    const { productId } = event.currentTarget.dataset;
+    confirm({
+      title: 'Are you sure delete this product?',
+      icon: <AiFillExclamationCircle />,
+      content: '',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        return axios
+          .delete(`api/products/${productId}`)
+          .then(() => mutate())
+          .catch(() => console.log('Ooops and error occurred'));
+      },
+      onCancel() {},
+    });
+  };
+
   return (
     <Layout>
       <Link href="/products/new" className="btn-primary">
@@ -31,7 +55,11 @@ const Products = () => {
                   <AiFillEdit />
                   <span>Edit</span>
                 </Link>
-                <button className="delete">
+                <button
+                  data-product-id={product._id}
+                  className="delete"
+                  onClick={showDeleteConfirm}
+                >
                   <AiOutlineDelete />
                   <span>Delete</span>
                 </button>
