@@ -3,7 +3,7 @@ import useProducts from '@/hooks/useProducts';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { AiFillEdit } from 'react-icons/ai';
+import { AiFillEdit, AiOutlineDelete } from 'react-icons/ai';
 
 const Products = () => {
   const { data: fetchedProducts, isLoading, error, mutate } = useProducts();
@@ -26,11 +26,15 @@ const Products = () => {
           {fetchedProducts?.map((product: Record<string, any>) => (
             <tr key={product._id}>
               <td>{product.name}</td>
-              <td>
+              <td className=" flex flex-row items-center space-x-2">
                 <Link href={`/products/${product._id}`}>
                   <AiFillEdit />
                   <span>Edit</span>
                 </Link>
+                <button className="delete">
+                  <AiOutlineDelete />
+                  <span>Delete</span>
+                </button>
               </td>
             </tr>
           ))}
