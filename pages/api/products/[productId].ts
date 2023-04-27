@@ -31,7 +31,17 @@ export default async function hanler(
         name,
         description,
       });
-      res.status(200).json(product);
+      res.status(200).json({ status: 'Updated' });
+    } catch (error) {
+      console.log(error);
+      res.status(400).end();
+    }
+  }
+
+  if (method === 'DELETE') {
+    try {
+      await Product.findByIdAndDelete(productId);
+      res.status(200).json({ status: 'Deleted' });
     } catch (error) {
       console.log(error);
       res.status(400).end();
