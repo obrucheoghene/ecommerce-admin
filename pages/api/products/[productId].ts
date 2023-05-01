@@ -23,13 +23,14 @@ export default async function hanler(
   }
 
   if (method === 'PATCH') {
-    const { name, price, description } = req.body;
+    const { name, price, description, images } = req.body;
 
     try {
       const product = await Product.findByIdAndUpdate(productId, {
         price,
         name,
         description,
+        images,
       });
       res.status(200).json({ status: 'Updated' });
     } catch (error) {
