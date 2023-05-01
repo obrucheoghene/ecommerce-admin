@@ -1,7 +1,8 @@
 import axios from 'axios';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
-import { AiOutlineUpload } from 'react-icons/ai';
+import { AiFillCloseCircle, AiOutlineUpload } from 'react-icons/ai';
 
 interface ProductFormProps {
   _id?: string;
@@ -9,26 +10,32 @@ interface ProductFormProps {
   description?: string;
   price?: string;
   images?: string[];
+  mutateFetchedProduct?: () => void;
 }
 const ProductForm: React.FC<ProductFormProps> = ({
   _id,
-  name: exitingName,
+  name: existingName,
   description: existingDescription,
   price: existingPrice,
-  images,
+  images: existingImages,
+  mutateFetchedProduct,
 }) => {
-  const [name, setName] = useState(exitingName || '');
+  const [name, setName] = useState(existingName || '');
   const [description, setDescription] = useState(existingDescription || '');
   const [price, setPrice] = useState(existingPrice || '');
+  const [images, setImages] = useState(existingImages || []);
   const router = useRouter();
 
   const handleSubmit = useCallback(async () => {
-    const data = { name, description, price };
+    const data = { name, description, price, images };
 
     try {
       if (_id) {
         // UPDATE PRODUCT
         await axios.patch(`/api/products/${_id}`, data);
+        if (mutateFetchedProduct) {
+          mutateFetchedProduct();
+        }
       } else {
         // CREATE PRODUCT
         await axios.post(`/api/products`, data);
@@ -37,7 +44,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
     } catch (error) {
       console.log(error);
     }
-  }, [router, name, description, price, _id]);
+  }, [router, name, description, price, _id, images, mutateFetchedProduct]);
 
   const handleUploadImages = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,12 +57,27 @@ const ProductForm: React.FC<ProductFormProps> = ({
       for (let i = 0; i < files.length; ++i) {
         formData.append('images', files[i]);
       }
-      const response = await axios.post('/api/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      console.log(response.data);
+      try {
+        const response = await axios.post('/api/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        console.log(response.data);
+        setImages((prevImg) => [...prevImg, ...response.data]);
+      } catch (error) {
+        console.log(error);
+      }
     },
     []
+  );
+
+  const handleRemoveImage = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      const updatedImages = images.filter(
+        (image: string) => image !== event.currentTarget.dataset.imagelink
+      );
+      setImages(updatedImages);
+    },
+    [images]
   );
 
   return (
@@ -68,7 +90,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         placeholder="Product name"
       />
       <label htmlFor="">Images</label>
-      <div className="mb-2">
+      <div className="flex flex-row flex-wrap space-x-2 mb-2">
         <label
           htmlFor="upload"
           className=" flex flex-col items-center justify-center w-24 h-24  rounded-md bg-gray-200 cursor-pointer"
@@ -82,6 +104,22 @@ const ProductForm: React.FC<ProductFormProps> = ({
             className="h-full w-full hidden"
           />
         </label>
+        {images.map((link) => (
+          <div key={link} className="h-24 relative">
+            <img
+              src={link}
+              alt="Product Image"
+              className="inline-block h-24 w-24 rounded-md"
+            />
+            <button
+              className="absolute top-0 right-0 p-1"
+              data-imagelink={link}
+              onClick={handleRemoveImage}
+            >
+              <AiFillCloseCircle className=" text-red-500 hover:text-red-600" />
+            </button>
+          </div>
+        ))}
         {!images?.length && <div> No images in this product</div>}
       </div>
       <div></div>
