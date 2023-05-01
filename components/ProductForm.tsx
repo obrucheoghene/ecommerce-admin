@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import { AiFillCloseCircle, AiOutlineUpload } from 'react-icons/ai';
+import Spinner from './Spinner';
 
 interface ProductFormProps {
   _id?: string;
@@ -24,6 +25,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const [description, setDescription] = useState(existingDescription || '');
   const [price, setPrice] = useState(existingPrice || '');
   const [images, setImages] = useState(existingImages || []);
+  const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = useCallback(async () => {
@@ -52,6 +54,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       if (!files) {
         return;
       }
+      setIsUploading(true);
       const formData = new FormData();
 
       for (let i = 0; i < files.length; ++i) {
@@ -66,6 +69,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       } catch (error) {
         console.log(error);
       }
+      setIsUploading(false);
     },
     []
   );
@@ -90,7 +94,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         placeholder="Product name"
       />
       <label htmlFor="">Images</label>
-      <div className="flex flex-row flex-wrap space-x-2 mb-2">
+      <div className="flex flex-row flex-wrap space-x-2 space-y-2 mb-2">
         <label
           htmlFor="upload"
           className=" flex flex-col items-center justify-center w-24 h-24  rounded-md bg-gray-200 cursor-pointer"
@@ -108,7 +112,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
           <div key={link} className="h-24 relative">
             <img
               src={link}
-              alt="Product Image"
+              alt=" "
               className="inline-block h-24 w-24 rounded-md"
             />
             <button
@@ -120,7 +124,11 @@ const ProductForm: React.FC<ProductFormProps> = ({
             </button>
           </div>
         ))}
-        {!images?.length && <div> No images in this product</div>}
+        {isUploading && (
+          <div className="flex flex-col items-center justify-center h-24 w-24 rounded-md bg-gray-200 ">
+            <Spinner />
+          </div>
+        )}
       </div>
       <div></div>
       <label htmlFor="">Description</label>
