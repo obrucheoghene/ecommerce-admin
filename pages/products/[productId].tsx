@@ -8,12 +8,12 @@ import React, { useCallback, useState } from 'react';
 const EditProduct = () => {
   const router = useRouter();
   const { productId } = router.query;
-  const { data: fetchedProduct } = useProducts(productId as string);
+  const { data: fetchedProduct, mutate } = useProducts(productId as string);
 
   return (
     <Layout>
       <h1> Edit Product</h1>
-      <ProductForm {...fetchedProduct} />
+      <ProductForm {...fetchedProduct} mutateFetchedProduct={mutate} />
     </Layout>
   );
 };
