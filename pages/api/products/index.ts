@@ -11,10 +11,15 @@ export default async function handler(
   await mongooseConnect();
 
   if (method === 'POST') {
-    const { name, price, description } = req.body;
+    const { name, price, description, images } = req.body;
 
     try {
-      const product = await Product.create({ name, price, description });
+      const product = await Product.create({
+        name,
+        price,
+        description,
+        images,
+      });
       res.status(200).json(product);
     } catch (error) {
       console.log(error);
