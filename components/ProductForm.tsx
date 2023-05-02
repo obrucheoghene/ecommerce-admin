@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import { AiFillCloseCircle, AiOutlineUpload } from 'react-icons/ai';
 import Spinner from './Spinner';
+import { ItemInterface, ReactSortable } from 'react-sortablejs';
 
 interface ProductFormProps {
   _id?: string;
@@ -77,7 +78,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const handleRemoveImage = useCallback(
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       const updatedImages = images.filter(
-        (image: string) => image !== event.currentTarget.dataset.imagelink
+        (image: string) => image != event.currentTarget.dataset.imagelink
       );
       setImages(updatedImages);
     },
@@ -94,7 +95,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         placeholder="Product name"
       />
       <label htmlFor="">Images</label>
-      <div className="flex flex-row flex-wrap space-x-2 space-y-2 mb-2">
+      <div className="flex flex-row space-x-2 items-center space-y-2 mb-2">
         <label
           htmlFor="upload"
           className=" flex flex-col items-center justify-center w-24 h-24  rounded-md bg-gray-200 cursor-pointer"
@@ -108,29 +109,35 @@ const ProductForm: React.FC<ProductFormProps> = ({
             className="h-full w-full hidden"
           />
         </label>
-        {images.map((link) => (
-          <div key={link} className="h-24 relative">
-            <img
-              src={link}
-              alt=" "
-              className="inline-block h-24 w-24 rounded-md"
-            />
-            <button
-              className="absolute top-0 right-0 p-1"
-              data-imagelink={link}
-              onClick={handleRemoveImage}
-            >
-              <AiFillCloseCircle className=" text-red-500 hover:text-red-600" />
-            </button>
-          </div>
-        ))}
+        <ReactSortable
+          list={images}
+          setList={setImages}
+          className=" flex flex-row items-center space-x-2"
+        >
+          {images.map((link) => (
+            <div key={link} className="h-24 relative">
+              <img
+                src={link}
+                alt=" "
+                className="inline-block h-24 w-24 rounded-md"
+              />
+              <button
+                className="absolute top-0 right-0 p-1"
+                data-imagelink={link}
+                onClick={handleRemoveImage}
+              >
+                <AiFillCloseCircle className=" text-red-500 hover:text-red-600" />
+              </button>
+            </div>
+          ))}
+        </ReactSortable>
+
         {isUploading && (
           <div className="flex flex-col items-center justify-center h-24 w-24 rounded-md bg-gray-200 ">
             <Spinner />
           </div>
         )}
       </div>
-      <div></div>
       <label htmlFor="">Description</label>
       <textarea
         value={description}
