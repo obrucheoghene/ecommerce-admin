@@ -17,7 +17,7 @@ export default async function handler(
   }
 
   if (method === 'POST') {
-    const { name } = req.body;
+    const { name, parent } = req.body;
     if (!name) {
       return res.status(400).end();
     }
@@ -26,7 +26,7 @@ export default async function handler(
       if (existingCategory) {
         return res.status(409).json({ error: 'Category already exist' });
       }
-      const category = await createCategory({ name });
+      const category = await createCategory({ name, parent });
       return res.status(200).json(category);
     } catch (error) {
       console.log(error);
