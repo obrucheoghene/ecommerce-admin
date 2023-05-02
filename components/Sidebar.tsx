@@ -36,6 +36,12 @@ const Sidebar = () => {
       icon: AiOutlineUnorderedList,
     },
     {
+      label: 'Categories',
+      href: '/categories',
+      isActive: pathname.includes('/categories') ? true : false,
+      icon: AiOutlineUnorderedList,
+    },
+    {
       label: 'Settings',
       href: '/settings',
       isActive: pathname.includes('/settings') ? true : false,
