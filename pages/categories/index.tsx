@@ -7,6 +7,7 @@ import { AiFillEdit, AiOutlineDelete } from 'react-icons/ai';
 
 const Categories = () => {
   const [name, setName] = useState('');
+  const [parent, setParent] = useState('');
   const [loading, setLoading] = useState(false);
   const { data: fetchedCategories = [], mutate: mutateCategories } =
     useCategories();
@@ -15,20 +16,34 @@ const Categories = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`api/categories`, { name });
+      const response = await axios.post(`api/categories`, { name, parent });
       setName('');
       mutateCategories();
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
-  }, [name, mutateCategories]);
+  }, [name, parent, mutateCategories]);
   return (
     <Layout>
       <h1> Category</h1>
 
       <label htmlFor="">New category name</label>
       <div className="flex flex-row items-center space-x-2">
+        <select
+          name=""
+          id=""
+          className=" mb-0 "
+          value={parent}
+          onChange={(event) => setParent(event.target.value)}
+        >
+          <option value="">No parent category</option>
+          {fetchedCategories.map((category: Record<string, any>) => (
+            <option key={category._id} value={category._id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
         <input
           type="text"
           value={name}
@@ -39,7 +54,7 @@ const Categories = () => {
         <button
           disabled={loading}
           onClick={handleCreateCategory}
-          className=" btn-primary"
+          className=" btn-primary w-fit"
         >
           Save
         </button>
@@ -49,6 +64,7 @@ const Categories = () => {
         <thead>
           <tr>
             <td>Categories</td>
+            <td>Parents</td>
             <td></td>
           </tr>
         </thead>
@@ -56,6 +72,7 @@ const Categories = () => {
           {fetchedCategories?.map((category: Record<string, any>) => (
             <tr key={category._id}>
               <td>{category.name}</td>
+              <td>{category?.parent?.name}</td>
               <td className=" flex flex-row items-center space-x-2">
                 <Link href={`/products/${category._id}`}>
                   <AiFillEdit />
