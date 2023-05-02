@@ -1,4 +1,9 @@
-import { Category, createCategory, getCategoryByName } from '@/models/category';
+import {
+  Category,
+  createCategory,
+  getCategories,
+  getCategoryByName,
+} from '@/models/category';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -21,8 +26,18 @@ export default async function handler(
       if (existingCategory) {
         return res.status(409).json({ error: 'Category already exist' });
       }
-      const category = await Category.create({ name });
+      const category = await createCategory({ name });
       return res.status(200).json(category);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).end();
+    }
+  }
+
+  if (method === 'GET') {
+    try {
+      const categories = await getCategories();
+      return res.status(200).json(categories);
     } catch (error) {
       console.log(error);
       return res.status(400).end();
