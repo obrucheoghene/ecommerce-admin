@@ -6,7 +6,6 @@ interface LayoutProps {
 }
 export default function Layout({ children }: LayoutProps) {
   const { data: session } = useSession();
-  console.log('session', session);
   if (!session) {
     return (
       <div className=" bg-blue-900 w-screen h-screen flex items-center">

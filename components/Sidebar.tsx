@@ -13,7 +13,6 @@ import { useRouter } from 'next/router';
 
 const Sidebar = () => {
   const router = useRouter();
-  console.log(router);
   const { pathname } = router;
   const items = [
     {
