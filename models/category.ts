@@ -16,3 +16,6 @@ export const getCategoryById = (_id: string) => Category.findById(_id);
 export const getCategoryByName = (name: string) => Category.findOne({ name });
 export const getCategoriesByParent = (parent: string) =>
   Category.find({ parent });
+
+export const updateCategoryById = (_id: string, data: Record<string, any>) =>
+  Category.findByIdAndUpdate(_id, data);
