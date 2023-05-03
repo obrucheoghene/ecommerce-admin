@@ -18,7 +18,7 @@ export default async function hanler(
       res.status(200).json(product);
     } catch (error) {
       console.log(error);
-      res.status(400).end();
+      return res.status(400).end();
     }
   }
 
@@ -32,20 +32,20 @@ export default async function hanler(
         description,
         images,
       });
-      res.status(200).json({ status: 'Updated' });
+      return res.status(200).json({ status: 'Updated' });
     } catch (error) {
       console.log(error);
-      res.status(400).end();
+      return res.status(400).end();
     }
   }
 
   if (method === 'DELETE') {
     try {
       await Product.findByIdAndDelete(productId);
-      res.status(200).json({ status: 'Deleted' });
+      return res.status(200).json({ status: 'Deleted' });
     } catch (error) {
       console.log(error);
-      res.status(400).end();
+      return res.status(400).end();
     }
   }
 }
