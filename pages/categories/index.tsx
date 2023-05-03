@@ -7,28 +7,55 @@ import { AiFillEdit, AiOutlineDelete } from 'react-icons/ai';
 
 const Categories = () => {
   const [name, setName] = useState('');
+  const [editCategory, setEditCategory] = useState<Record<string, any>>({});
   const [parent, setParent] = useState('');
   const [loading, setLoading] = useState(false);
   const { data: fetchedCategories = [], mutate: mutateCategories } =
     useCategories();
 
-  const handleCreateCategory = useCallback(async () => {
+  const handleSaveCategory = useCallback(async () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`api/categories`, { name, parent });
+      if (Object.keys(editCategory).length === 0) {
+        await axios.post(`api/categories`, { name, parent });
+      } else {
+        console.log('hee');
+        await axios.patch(`api/categories/${editCategory._id}`, {
+          name,
+          parent,
+        });
+      }
+      setEditCategory({});
       setName('');
+      setParent('');
       mutateCategories();
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
-  }, [name, parent, mutateCategories]);
+  }, [name, parent, editCategory, mutateCategories]);
+
+  const handleEditCategory = useCallback(
+    (
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+      category: Record<string, any>
+    ) => {
+      setEditCategory(category);
+      setName(category.name);
+      setParent(category?.parent?._id || '');
+    },
+    []
+  );
   return (
     <Layout>
       <h1> Category</h1>
 
-      <label htmlFor="">New category name</label>
+      <label htmlFor="">
+        {Object.keys(editCategory).length === 0
+          ? 'Add new category'
+          : 'Edit category'}
+      </label>
       <div className="flex flex-row items-center space-x-2">
         <select
           name=""
@@ -53,10 +80,10 @@ const Categories = () => {
         />
         <button
           disabled={loading}
-          onClick={handleCreateCategory}
+          onClick={handleSaveCategory}
           className=" btn-primary w-fit"
         >
-          Save
+          {loading ? 'Saving..' : 'Save'}
         </button>
       </div>
 
@@ -74,11 +101,16 @@ const Categories = () => {
               <td>{category.name}</td>
               <td>{category?.parent?.name}</td>
               <td className=" flex flex-row items-center space-x-2">
-                <Link href={`/products/${category._id}`}>
+                <button
+                  onClick={(
+                    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                  ) => handleEditCategory(event, category)}
+                  className="edit"
+                >
                   <AiFillEdit />
                   <span>Edit</span>
-                </Link>
-                <button data-product-id={category._id} className="delete">
+                </button>
+                <button data-category-id={category._id} className="delete">
                   <AiOutlineDelete />
                   <span>Delete</span>
                 </button>
