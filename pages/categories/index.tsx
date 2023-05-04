@@ -3,7 +3,14 @@ import useCategories from '@/hooks/useCategory';
 import axios from 'axios';
 import Link from 'next/link';
 import { useCallback, useState } from 'react';
-import { AiFillEdit, AiOutlineDelete } from 'react-icons/ai';
+import {
+  AiFillEdit,
+  AiFillExclamationCircle,
+  AiOutlineDelete,
+} from 'react-icons/ai';
+import { Modal } from 'antd';
+
+const { confirm } = Modal;
 
 const Categories = () => {
   const [name, setName] = useState('');
@@ -47,6 +54,28 @@ const Categories = () => {
     },
     []
   );
+
+  const showDeleteConfirm = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    category: Record<string, any>
+  ) => {
+    confirm({
+      title: 'Are you sure delete this category?',
+      icon: <AiFillExclamationCircle />,
+      content: '',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        return axios
+          .delete(`/api/categories/${category._id}`)
+          .then(() => mutateCategories())
+          .catch(() => console.log('Ooops and error occurred'));
+      },
+      onCancel() {},
+    });
+  };
+
   return (
     <Layout>
       <h1> Category</h1>
@@ -57,6 +86,13 @@ const Categories = () => {
           : 'Edit category'}
       </label>
       <div className="flex flex-row items-center space-x-2">
+        <input
+          type="text"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          className=" mb-0  "
+          placeholder="Category name"
+        />
         <select
           name=""
           id=""
@@ -71,13 +107,6 @@ const Categories = () => {
             </option>
           ))}
         </select>
-        <input
-          type="text"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          className=" mb-0  "
-          placeholder="Category name"
-        />
         <button
           disabled={loading}
           onClick={handleSaveCategory}
@@ -90,17 +119,16 @@ const Categories = () => {
       <table className=" basic mt-2">
         <thead>
           <tr>
-            <td>Parents</td>
             <td>Categories</td>
+            <td>Parents</td>
             <td></td>
           </tr>
         </thead>
         <tbody>
           {fetchedCategories?.map((category: Record<string, any>) => (
             <tr key={category._id}>
-              <td>{category?.parent?.name}</td>
               <td>{category.name}</td>
-
+              <td>{category?.parent?.name}</td>
               <td className=" flex flex-row items-center space-x-2">
                 <button
                   onClick={(
@@ -111,7 +139,12 @@ const Categories = () => {
                   <AiFillEdit />
                   <span>Edit</span>
                 </button>
-                <button data-category-id={category._id} className="delete">
+                <button
+                  onClick={(
+                    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                  ) => showDeleteConfirm(event, category)}
+                  className="delete"
+                >
                   <AiOutlineDelete />
                   <span>Delete</span>
                 </button>
