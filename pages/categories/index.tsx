@@ -90,16 +90,17 @@ const Categories = () => {
       <table className=" basic mt-2">
         <thead>
           <tr>
-            <td>Categories</td>
             <td>Parents</td>
+            <td>Categories</td>
             <td></td>
           </tr>
         </thead>
         <tbody>
           {fetchedCategories?.map((category: Record<string, any>) => (
             <tr key={category._id}>
-              <td>{category.name}</td>
               <td>{category?.parent?.name}</td>
+              <td>{category.name}</td>
+
               <td className=" flex flex-row items-center space-x-2">
                 <button
                   onClick={(

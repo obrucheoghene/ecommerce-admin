@@ -26,7 +26,10 @@ export default async function handler(
       if (existingCategory) {
         return res.status(409).json({ error: 'Category already exist' });
       }
-      const category = await createCategory({ name, parent });
+      const category = await createCategory({
+        name,
+        parent: parent === '' ? null : parent,
+      });
       return res.status(200).json(category);
     } catch (error) {
       console.log(error);
