@@ -1,4 +1,5 @@
 import {
+  deleteCategoryById,
   getCategoryById,
   getCategoryByName,
   updateCategoryById,
@@ -60,5 +61,12 @@ export default async function handler(
   }
 
   if (method === 'DELETE') {
+    try {
+      await deleteCategoryById(categoryId);
+      return res.status(200).json({ status: 'Deleted' });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).end();
+    }
   }
 }
