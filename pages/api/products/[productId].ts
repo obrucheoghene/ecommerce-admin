@@ -1,4 +1,9 @@
-import { Product } from '@/models/product';
+import {
+  Product,
+  deleteProductById,
+  getProductById,
+  updateProductById,
+} from '@/models/product';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function hanler(
@@ -14,7 +19,7 @@ export default async function hanler(
 
   if (method === 'GET') {
     try {
-      const product = await Product.findById(productId);
+      const product = await getProductById(productId);
       res.status(200).json(product);
     } catch (error) {
       console.log(error);
@@ -26,7 +31,7 @@ export default async function hanler(
     const { name, price, description, images } = req.body;
 
     try {
-      const product = await Product.findByIdAndUpdate(productId, {
+      const product = await updateProductById(productId, {
         price,
         name,
         description,
@@ -41,7 +46,7 @@ export default async function hanler(
 
   if (method === 'DELETE') {
     try {
-      await Product.findByIdAndDelete(productId);
+      await deleteProductById(productId);
       return res.status(200).json({ status: 'Deleted' });
     } catch (error) {
       console.log(error);

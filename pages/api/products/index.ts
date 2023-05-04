@@ -1,6 +1,6 @@
 import clientPromise from '@/lib/mongodb';
 import { mongooseConnect } from '@/lib/mongoose';
-import { Product } from '@/models/product';
+import { Product, createProduct, getProducts } from '@/models/product';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -14,7 +14,7 @@ export default async function handler(
     const { name, price, description, images } = req.body;
 
     try {
-      const product = await Product.create({
+      const product = await createProduct({
         name,
         price,
         description,
@@ -29,7 +29,7 @@ export default async function handler(
 
   if (method === 'GET') {
     try {
-      const products = await Product.find({});
+      const products = await getProducts();
 
       res.status(200).json(products);
     } catch (error) {
