@@ -9,24 +9,24 @@ import {
 import { Modal } from 'antd';
 import axios from 'axios';
 const Products = () => {
-  const { data: fetchedProducts, mutate } = useProducts();
+  const { data: fetchedProducts, mutate: mutateProducts } = useProducts();
   const { confirm } = Modal;
 
   const showDeleteConfirm = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    product: Record<string, any>
   ) => {
-    const { productId } = event.currentTarget.dataset;
     confirm({
-      title: 'Are you sure delete this product?',
+      title: 'Are you sure?',
       icon: <AiFillExclamationCircle />,
-      content: '',
+      content: `Do you want to delete ${product.name} product`,
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
       onOk() {
         return axios
-          .delete(`api/products/${productId}`)
-          .then(() => mutate())
+          .delete(`api/products/${product._id}`)
+          .then(() => mutateProducts())
           .catch(() => console.log('Ooops and error occurred'));
       },
       onCancel() {},
@@ -56,9 +56,10 @@ const Products = () => {
                   <span>Edit</span>
                 </Link>
                 <button
-                  data-product-id={product._id}
                   className="delete"
-                  onClick={showDeleteConfirm}
+                  onClick={(
+                    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                  ) => showDeleteConfirm(event, product)}
                 >
                   <AiOutlineDelete />
                   <span>Delete</span>
