@@ -37,14 +37,17 @@ export default async function handler(
       const fetchedCategory = await getCategoryById(categoryId);
       console.log(fetchedCategory);
 
-      console.log(parent);
+      console.log('parent', parent);
       if (!fetchedCategory) {
         return res
           .status(400)
           .json({ error: 'A category with this id does not exist' });
       }
 
-      await updateCategoryById(categoryId, { name });
+      await updateCategoryById(categoryId, {
+        name,
+        parent: parent === '' ? null : parent,
+      });
 
       return res.status(200).json({ status: 'Updated' });
     } catch (error) {
