@@ -19,3 +19,6 @@ export const getCategoriesByParent = (parent: string) =>
 
 export const updateCategoryById = (_id: string, data: Record<string, any>) =>
   Category.findByIdAndUpdate(_id, data);
+
+export const deleteCategoryById = (_id: string) =>
+  Category.findByIdAndDelete(_id);
