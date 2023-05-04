@@ -17,6 +17,7 @@ const Categories = () => {
   const [editCategory, setEditCategory] = useState<Record<string, any>>({});
   const [parent, setParent] = useState('');
   const [loading, setLoading] = useState(false);
+  const [properties, setProperties] = useState<Record<string, any>[]>([]);
   const { data: fetchedCategories = [], mutate: mutateCategories } =
     useCategories();
 
@@ -76,6 +77,30 @@ const Categories = () => {
     });
   };
 
+  const handleAddProperties = useCallback(() => {
+    setProperties((prev) => [...prev, { name: '', values: '' }]);
+  }, []);
+
+  const handlePropertyNameChange = useCallback(
+    (name: string, property: Record<string, any>, index: number) => {
+      setProperties((prev) => {
+        const properties = [...prev];
+        properties[index].name = name;
+        return properties;
+      });
+    },
+    []
+  );
+  const handlePropertyValueChange = useCallback(
+    (value: string, property: Record<string, any>, index: number) => {
+      setProperties((prev) => {
+        const properties = [...prev];
+        properties[index].value = value;
+        return properties;
+      });
+    },
+    []
+  );
   return (
     <Layout>
       <h1> Category</h1>
@@ -85,28 +110,58 @@ const Categories = () => {
           ? 'Add new category'
           : 'Edit category'}
       </label>
-      <div className="flex flex-row items-center space-x-2">
-        <input
-          type="text"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          className=" mb-0  "
-          placeholder="Category name"
-        />
-        <select
-          name=""
-          id=""
-          className=" mb-0 "
-          value={parent}
-          onChange={(event) => setParent(event.target.value)}
-        >
-          <option value="">No parent category</option>
-          {fetchedCategories.map((category: Record<string, any>) => (
-            <option key={category._id} value={category._id}>
-              {category.name}
-            </option>
+      <div>
+        <div className="flex flex-row items-center space-x-2">
+          <input
+            type="text"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            placeholder="Category name"
+          />
+          <select
+            name=""
+            id=""
+            value={parent}
+            onChange={(event) => setParent(event.target.value)}
+          >
+            <option value="">No parent category</option>
+            {fetchedCategories.map((category: Record<string, any>) => (
+              <option key={category._id} value={category._id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-2">
+          <label htmlFor="">Properties</label>
+          <br />
+          <button
+            onClick={handleAddProperties}
+            className=" p-2 bg-gray-300 rounded-md"
+          >
+            Add properties
+          </button>
+          {properties?.map((property: Record<string, any>, index: number) => (
+            <div key={index} className="flex gap-1">
+              <input
+                type="text"
+                placeholder="name"
+                value={property.name}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  handlePropertyNameChange(event.target.value, property, index)
+                }
+              />
+              <input
+                type="text"
+                placeholder="value"
+                value={property.value}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  handlePropertyValueChange(event.target.value, property, index)
+                }
+              />
+            </div>
           ))}
-        </select>
+        </div>
         <button
           disabled={loading}
           onClick={handleSaveCategory}

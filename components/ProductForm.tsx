@@ -117,7 +117,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         value={category}
         onChange={(event) => setCategory(event.target.value)}
       >
-        <option value="">No parent category</option>
+        <option value="">Uncategorised</option>
         {fetchedCategories.map((category: Record<string, any>) => (
           <option key={category._id} value={category._id}>
             {category.name}
