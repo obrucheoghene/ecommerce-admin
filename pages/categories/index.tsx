@@ -60,9 +60,9 @@ const Categories = () => {
     category: Record<string, any>
   ) => {
     confirm({
-      title: 'Are you sure delete this category?',
+      title: 'Are you sure?',
       icon: <AiFillExclamationCircle />,
-      content: '',
+      content: `Do you want to delete ${category.name} category?`,
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
