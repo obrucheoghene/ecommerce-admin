@@ -28,7 +28,7 @@ export default async function hanler(
   }
 
   if (method === 'PATCH') {
-    const { name, price, description, images } = req.body;
+    const { name, price, description, images, category } = req.body;
 
     try {
       const product = await updateProductById(productId, {
@@ -36,6 +36,7 @@ export default async function hanler(
         name,
         description,
         images,
+        category,
       });
       return res.status(200).json({ status: 'Updated' });
     } catch (error) {
