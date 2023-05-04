@@ -5,6 +5,7 @@ import React, { useCallback, useState } from 'react';
 import { AiFillCloseCircle, AiOutlineUpload } from 'react-icons/ai';
 import Spinner from './Spinner';
 import { ItemInterface, ReactSortable } from 'react-sortablejs';
+import useCategories from '@/hooks/useCategory';
 
 interface ProductFormProps {
   _id?: string;
@@ -12,6 +13,7 @@ interface ProductFormProps {
   description?: string;
   price?: string;
   images?: string[];
+  category?: string;
   mutateFetchedProduct?: () => void;
 }
 const ProductForm: React.FC<ProductFormProps> = ({
@@ -20,34 +22,46 @@ const ProductForm: React.FC<ProductFormProps> = ({
   description: existingDescription,
   price: existingPrice,
   images: existingImages,
+  category: existingCategory,
   mutateFetchedProduct,
 }) => {
   const [name, setName] = useState(existingName || '');
   const [description, setDescription] = useState(existingDescription || '');
   const [price, setPrice] = useState(existingPrice || '');
   const [images, setImages] = useState(existingImages || []);
+  const [category, setCategory] = useState(existingCategory || '');
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
+  const { data: fetchedCategories = [] } = useCategories();
+
   const handleSubmit = useCallback(async () => {
-    const data = { name, description, price, images };
+    const data = { name, description, price, images, category };
 
     try {
       if (_id) {
         // UPDATE PRODUCT
         await axios.patch(`/api/products/${_id}`, data);
-        if (mutateFetchedProduct) {
-          mutateFetchedProduct();
-        }
       } else {
         // CREATE PRODUCT
         await axios.post(`/api/products`, data);
       }
+      mutateFetchedProduct && mutateFetchedProduct();
+
       router.push('/products');
     } catch (error) {
       console.log(error);
     }
-  }, [router, name, description, price, _id, images, mutateFetchedProduct]);
+  }, [
+    router,
+    name,
+    description,
+    price,
+    _id,
+    images,
+    category,
+    mutateFetchedProduct,
+  ]);
 
   const handleUploadImages = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,6 +108,23 @@ const ProductForm: React.FC<ProductFormProps> = ({
         onChange={(event) => setName(event.target.value)}
         placeholder="Product name"
       />
+
+      <label htmlFor="">Category</label>
+      <select
+        name=""
+        id=""
+        className=" mb-0 "
+        value={category}
+        onChange={(event) => setCategory(event.target.value)}
+      >
+        <option value="">No parent category</option>
+        {fetchedCategories.map((category: Record<string, any>) => (
+          <option key={category._id} value={category._id}>
+            {category.name}
+          </option>
+        ))}
+      </select>
+
       <label htmlFor="">Images</label>
       <div className="flex flex-row space-x-2 items-center space-y-2 mb-2">
         <label
