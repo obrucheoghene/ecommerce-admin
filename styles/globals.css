@@ -43,7 +43,7 @@ table.basic a {
   @apply flex flex-row w-fit items-center  space-x-1  bg-blue-900 text-white text-sm py-1 rounded-md px-2;
 }
 
-table.basic .delete {
+.delete {
   @apply flex flex-row w-fit items-center  space-x-1  bg-red-900 text-white text-sm py-1 rounded-md px-2;
 }
 
