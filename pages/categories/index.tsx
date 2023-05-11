@@ -44,17 +44,14 @@ const Categories = () => {
     setLoading(false);
   }, [name, parent, editCategory, mutateCategories]);
 
-  const handleEditCategory = useCallback(
-    (
-      event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-      category: Record<string, any>
-    ) => {
-      setEditCategory(category);
-      setName(category.name);
-      setParent(category?.parent?._id || '');
-    },
-    []
-  );
+  const handleEditCategory = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    category: Record<string, any>
+  ) => {
+    setEditCategory(category);
+    setName(category.name);
+    setParent(category?.parent?._id || '');
+  };
 
   const showDeleteConfirm = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -77,30 +74,35 @@ const Categories = () => {
     });
   };
 
-  const handleAddProperties = useCallback(() => {
-    setProperties((prev) => [...prev, { name: '', values: '' }]);
-  }, []);
+  const handleAddProperties = () => {
+    setProperties((prev) => [...prev, { name: '', value: '' }]);
+  };
 
-  const handlePropertyNameChange = useCallback(
-    (name: string, property: Record<string, any>, index: number) => {
-      setProperties((prev) => {
-        const properties = [...prev];
-        properties[index].name = name;
-        return properties;
-      });
-    },
-    []
-  );
-  const handlePropertyValueChange = useCallback(
-    (value: string, property: Record<string, any>, index: number) => {
-      setProperties((prev) => {
-        const properties = [...prev];
-        properties[index].value = value;
-        return properties;
-      });
-    },
-    []
-  );
+  const handlePropertyNameChange = (name: string, index: number) => {
+    setProperties((prev) => {
+      const properties = [...prev];
+      properties[index].name = name;
+      return properties;
+    });
+  };
+
+  const handlePropertyValueChange = (value: string, index: number) => {
+    setProperties((prev) => {
+      const properties = [...prev];
+      properties[index].value = value;
+      return properties;
+    });
+  };
+
+  const handleRemoveProperty = (index: number) => {
+    console.log(index);
+    setProperties((prev) => {
+      let properties = [...prev];
+      properties.splice(index, 1);
+      return properties;
+    });
+  };
+
   return (
     <Layout>
       <h1> Category</h1>
@@ -142,13 +144,16 @@ const Categories = () => {
             Add properties
           </button>
           {properties?.map((property: Record<string, any>, index: number) => (
-            <div key={index} className="flex gap-1">
+            <div
+              key={index}
+              className="flex gap-1 items-center justify-between"
+            >
               <input
                 type="text"
                 placeholder="name"
                 value={property.name}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  handlePropertyNameChange(event.target.value, property, index)
+                  handlePropertyNameChange(event.target.value, index)
                 }
               />
               <input
@@ -156,9 +161,20 @@ const Categories = () => {
                 placeholder="value"
                 value={property.value}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  handlePropertyValueChange(event.target.value, property, index)
+                  handlePropertyValueChange(event.target.value, index)
                 }
               />
+              <button
+                className=" delete "
+                onClick={(
+                  event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                ) => {
+                  handleRemoveProperty(index);
+                }}
+              >
+                <AiOutlineDelete />
+                <span>Remove</span>
+              </button>
             </div>
           ))}
         </div>
