@@ -1,3 +1,4 @@
+import { mongooseConnect } from '@/lib/mongoose';
 import {
   Product,
   deleteProductById,
@@ -10,6 +11,8 @@ export default async function hanler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  await mongooseConnect();
+
   const { method } = req;
   const { productId } = req.query;
 
