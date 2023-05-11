@@ -53,6 +53,14 @@ const Categories = () => {
     setParent(category?.parent?._id || '');
   };
 
+  const handleCancelEditCategory = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    setEditCategory({});
+    setName('');
+    setParent('');
+  };
+
   const showDeleteConfirm = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     category: Record<string, any>
@@ -158,7 +166,7 @@ const Categories = () => {
               />
               <input
                 type="text"
-                placeholder="value"
+                placeholder="values, comma seperaeted"
                 value={property.value}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                   handlePropertyValueChange(event.target.value, index)
@@ -178,52 +186,66 @@ const Categories = () => {
             </div>
           ))}
         </div>
-        <button
-          disabled={loading}
-          onClick={handleSaveCategory}
-          className=" btn-primary w-fit"
-        >
-          {loading ? 'Saving..' : 'Save'}
-        </button>
+        <div className=" flex flex-row justify-start items-center gap-2">
+          <button
+            disabled={loading}
+            onClick={handleSaveCategory}
+            className=" btn-primary w-fit"
+          >
+            {loading ? 'Saving..' : 'Save'}
+          </button>
+
+          {Object.keys(editCategory).length !== 0 && (
+            <button
+              disabled={loading}
+              onClick={handleCancelEditCategory}
+              className="p-2 bg-gray-300 rounded-md "
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </div>
 
-      <table className=" basic mt-2">
-        <thead>
-          <tr>
-            <td>Categories</td>
-            <td>Parents</td>
-            <td></td>
-          </tr>
-        </thead>
-        <tbody>
-          {fetchedCategories?.map((category: Record<string, any>) => (
-            <tr key={category._id}>
-              <td>{category.name}</td>
-              <td>{category?.parent?.name}</td>
-              <td className=" flex flex-row items-center space-x-2">
-                <button
-                  onClick={(
-                    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                  ) => handleEditCategory(event, category)}
-                  className="edit"
-                >
-                  <AiFillEdit />
-                  <span>Edit</span>
-                </button>
-                <button
-                  onClick={(
-                    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                  ) => showDeleteConfirm(event, category)}
-                  className="delete"
-                >
-                  <AiOutlineDelete />
-                  <span>Delete</span>
-                </button>
-              </td>
+      {Object.keys(editCategory).length === 0 && (
+        <table className=" basic mt-2">
+          <thead>
+            <tr>
+              <td>Categories</td>
+              <td>Parents</td>
+              <td></td>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {fetchedCategories?.map((category: Record<string, any>) => (
+              <tr key={category._id}>
+                <td>{category.name}</td>
+                <td>{category?.parent?.name}</td>
+                <td className=" flex flex-row items-center space-x-2">
+                  <button
+                    onClick={(
+                      event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                    ) => handleEditCategory(event, category)}
+                    className="edit"
+                  >
+                    <AiFillEdit />
+                    <span>Edit</span>
+                  </button>
+                  <button
+                    onClick={(
+                      event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                    ) => showDeleteConfirm(event, category)}
+                    className="delete"
+                  >
+                    <AiOutlineDelete />
+                    <span>Delete</span>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </Layout>
   );
 };
