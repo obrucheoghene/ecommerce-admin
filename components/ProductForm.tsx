@@ -101,13 +101,19 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
   const propertiesToFill = [];
   if (fetchedCategories.length > 0 && category) {
-    const selectedCategory = fetchedCategories.find(
+    let selectedCategory = fetchedCategories.find(
       ({ _id }: { _id: string }) => _id === category
     );
-    const parentProperties = selectedCategory?.parent
-      ? selectedCategory?.parent.properties
-      : [];
-    propertiesToFill.push(...selectedCategory.properties, ...parentProperties);
+    propertiesToFill.push(...selectedCategory.properties);
+
+    while (selectedCategory?.parent?._id) {
+      const parentCategory = fetchedCategories.find(
+        ({ _id }: { _id: string }) => _id === selectedCategory?.parent?._id
+      );
+      propertiesToFill.push(...parentCategory.properties);
+
+      selectedCategory = parentCategory;
+    }
   }
   return (
     <div>
