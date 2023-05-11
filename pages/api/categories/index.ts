@@ -1,3 +1,4 @@
+import { mongooseConnect } from '@/lib/mongoose';
 import {
   Category,
   createCategory,
@@ -11,6 +12,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { method } = req;
+
+  await mongooseConnect();
 
   if (method !== 'POST' && method !== 'GET') {
     return res.status(400).end();

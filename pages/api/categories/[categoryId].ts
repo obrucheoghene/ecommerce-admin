@@ -1,3 +1,4 @@
+import { mongooseConnect } from '@/lib/mongoose';
 import {
   deleteCategoryById,
   getCategoryById,
@@ -10,6 +11,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  await mongooseConnect();
+
   const { method } = req;
   const { categoryId } = req.query;
 
