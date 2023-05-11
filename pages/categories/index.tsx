@@ -35,7 +35,6 @@ const Categories = () => {
       if (Object.keys(editCategory).length === 0) {
         await axios.post(`api/categories`, data);
       } else {
-        console.log('hee');
         await axios.patch(`api/categories/${editCategory._id}`, data);
       }
       setEditCategory({});
@@ -58,7 +57,7 @@ const Categories = () => {
     setParent(category?.parent?._id || '');
     const properties = category.properties.map((p: Record<string, any>) => ({
       name: p.name,
-      value: p.value.join(),
+      value: p.value.join(','),
     }));
     setProperties(properties);
   };
