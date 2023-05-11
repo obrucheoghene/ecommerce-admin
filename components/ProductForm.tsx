@@ -99,6 +99,16 @@ const ProductForm: React.FC<ProductFormProps> = ({
     [images]
   );
 
+  const propertiesToFill = [];
+  if (fetchedCategories.length > 0 && category) {
+    const selectedCategory = fetchedCategories.find(
+      ({ _id }: { _id: string }) => _id === category
+    );
+    const parentProperties = selectedCategory?.parent
+      ? selectedCategory?.parent.properties
+      : [];
+    propertiesToFill.push(...selectedCategory.properties, ...parentProperties);
+  }
   return (
     <div>
       <label htmlFor=""> Product name</label>
@@ -124,6 +134,11 @@ const ProductForm: React.FC<ProductFormProps> = ({
           </option>
         ))}
       </select>
+
+      {propertiesToFill.length > 0 &&
+        propertiesToFill.map((property: Record<string, any>) => (
+          <div key={property.name}> {property.name}</div>
+        ))}
 
       <label htmlFor="">Images</label>
       <div className="flex flex-row space-x-2 items-center space-y-2 mb-2">
