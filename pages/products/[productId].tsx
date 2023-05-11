@@ -8,14 +8,21 @@ import React, { useCallback, useEffect, useState } from 'react';
 const EditProduct = () => {
   const router = useRouter();
   const { productId } = router.query;
-  const { data: fetchedProduct, mutate: mutateProducts } = useProducts(
-    productId as string
-  );
+  const {
+    data: fetchedProduct = {},
+    isLoading,
+    mutate: mutateProducts,
+  } = useProducts(productId as string);
 
   return (
     <Layout>
       <h1> Edit Product</h1>
-      <ProductForm {...fetchedProduct} mutateFetchedProduct={mutateProducts} />
+      {Object.keys(fetchedProduct).length > 0 && (
+        <ProductForm
+          {...fetchedProduct}
+          mutateFetchedProduct={mutateProducts}
+        />
+      )}
     </Layout>
   );
 };
