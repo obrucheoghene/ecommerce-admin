@@ -23,26 +23,31 @@ const Categories = () => {
 
   const handleSaveCategory = useCallback(async () => {
     setLoading(true);
-
+    const data = {
+      name,
+      parent,
+      properties: properties.map((p: Record<string, any>) => ({
+        name: p.name,
+        value: p.value.split(','),
+      })),
+    };
     try {
       if (Object.keys(editCategory).length === 0) {
-        await axios.post(`api/categories`, { name, parent });
+        await axios.post(`api/categories`, data);
       } else {
         console.log('hee');
-        await axios.patch(`api/categories/${editCategory._id}`, {
-          name,
-          parent,
-        });
+        await axios.patch(`api/categories/${editCategory._id}`, data);
       }
       setEditCategory({});
       setName('');
       setParent('');
+      setProperties([]);
       mutateCategories();
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
-  }, [name, parent, editCategory, mutateCategories]);
+  }, [name, parent, editCategory, properties, mutateCategories]);
 
   const handleEditCategory = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -51,6 +56,11 @@ const Categories = () => {
     setEditCategory(category);
     setName(category.name);
     setParent(category?.parent?._id || '');
+    const properties = category.properties.map((p: Record<string, any>) => ({
+      name: p.name,
+      value: p.value.join(),
+    }));
+    setProperties(properties);
   };
 
   const handleCancelEditCategory = (

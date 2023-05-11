@@ -20,7 +20,7 @@ export default async function handler(
   }
 
   if (method === 'POST') {
-    const { name, parent } = req.body;
+    const { name, parent, properties } = req.body;
     if (!name) {
       return res.status(400).end();
     }
@@ -32,6 +32,7 @@ export default async function handler(
       const category = await createCategory({
         name,
         parent: parent === '' ? null : parent,
+        properties,
       });
       return res.status(200).json(category);
     } catch (error) {

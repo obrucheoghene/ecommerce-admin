@@ -4,6 +4,7 @@ import { Schema, models, model } from 'mongoose';
 const CategorySchema = new Schema({
   name: { type: String, require: true },
   parent: { type: ObjectId, ref: 'Category', default: null },
+  properties: [{ type: Object }],
 });
 
 export const Category = models?.Category || model('Category', CategorySchema);

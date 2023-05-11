@@ -16,7 +16,7 @@ export default async function handler(
   const { method } = req;
   const { categoryId } = req.query;
 
-  if (method !== 'PATCH' && method !== 'GET' && method === 'DELET') {
+  if (method !== 'PATCH' && method !== 'GET' && method === 'DELETE') {
     return res.status(400).end();
   }
 
@@ -25,7 +25,7 @@ export default async function handler(
   }
 
   if (method === 'PATCH') {
-    const { name, parent } = req.body;
+    const { name, parent, properties } = req.body;
 
     if (!name) {
       return res.status(400).json({ error: 'Category name is required' });
@@ -51,6 +51,7 @@ export default async function handler(
       await updateCategoryById(categoryId, {
         name,
         parent: parent === '' ? null : parent,
+        properties,
       });
 
       return res.status(200).json({ status: 'Updated' });
