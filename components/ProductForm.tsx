@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useCallback, useState } from 'react';
+import React, { lazy, useCallback, useState } from 'react';
 import { AiFillCloseCircle, AiOutlineUpload } from 'react-icons/ai';
 import Spinner from './Spinner';
 import { ItemInterface, ReactSortable } from 'react-sortablejs';
@@ -129,7 +129,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       <select
         name=""
         id=""
-        className=" mb-0 "
+        className=" mb-2 "
         value={category}
         onChange={(event) => setCategory(event.target.value)}
       >
@@ -142,8 +142,20 @@ const ProductForm: React.FC<ProductFormProps> = ({
       </select>
 
       {propertiesToFill.length > 0 &&
-        propertiesToFill.map((property: Record<string, any>) => (
-          <div key={property.name}> {property.name}</div>
+        propertiesToFill.map((property: Record<string, any>, index: number) => (
+          <div
+            key={index}
+            className=" flex flex-row justify-start items-center gap-2"
+          >
+            <div>{property.name}</div>
+            <select name="" id="">
+              {property.value.map((v: string, index: number) => (
+                <option key={index} value={v}>
+                  {v}
+                </option>
+              ))}
+            </select>
+          </div>
         ))}
 
       <label htmlFor="">Images</label>
