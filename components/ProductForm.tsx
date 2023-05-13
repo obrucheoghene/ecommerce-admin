@@ -31,6 +31,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const [images, setImages] = useState(existingImages || []);
   const [category, setCategory] = useState(existingCategory || '');
   const [isUploading, setIsUploading] = useState(false);
+  const [properties, setProperties] = useState({});
   const router = useRouter();
 
   const { data: fetchedCategories = [] } = useCategories();
