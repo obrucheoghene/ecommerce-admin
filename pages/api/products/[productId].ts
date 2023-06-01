@@ -33,6 +33,8 @@ export default async function hanler(
   if (method === 'PATCH') {
     const { name, price, description, images, category, properties } = req.body;
 
+    console.log(properties);
+
     try {
       const product = await updateProductById(productId, {
         price,

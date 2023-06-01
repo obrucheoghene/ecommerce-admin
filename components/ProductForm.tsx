@@ -6,6 +6,7 @@ import { AiFillCloseCircle, AiOutlineUpload } from 'react-icons/ai';
 import Spinner from './Spinner';
 import { ItemInterface, ReactSortable } from 'react-sortablejs';
 import useCategories from '@/hooks/useCategory';
+import { isPropertySignature } from 'typescript';
 
 interface ProductFormProps {
   _id?: string;
@@ -49,7 +50,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
       category,
       properties: productProperties,
     };
-
     try {
       if (_id) {
         // UPDATE PRODUCT
@@ -73,6 +73,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
     images,
     category,
     mutateFetchedProduct,
+    productProperties,
   ]);
 
   const handleUploadImages = useCallback(
