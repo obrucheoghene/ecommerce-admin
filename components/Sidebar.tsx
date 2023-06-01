@@ -3,6 +3,7 @@ import React from 'react';
 import {
   AiOutlineAppstoreAdd,
   AiOutlineDashboard,
+  AiOutlineLogout,
   AiOutlineSetting,
   AiOutlineShoppingCart,
   AiOutlineUnorderedList,
@@ -10,6 +11,7 @@ import {
 import SidebarItem from './SidebarItem';
 import SidebarLogo from './SidebarLogo';
 import { useRouter } from 'next/router';
+import { signOut } from 'next-auth/react';
 
 const Sidebar = () => {
   const router = useRouter();
@@ -45,6 +47,10 @@ const Sidebar = () => {
       href: '/settings',
       isActive: pathname.includes('/settings') ? true : false,
       icon: AiOutlineSetting,
+    },
+    {
+      label: 'Logout',
+      icon: AiOutlineLogout,
     },
   ];
 
