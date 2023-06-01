@@ -15,6 +15,7 @@ interface ProductFormProps {
   images?: string[];
   category?: string;
   mutateFetchedProduct?: () => void;
+  properties: Record<string, any>;
 }
 const ProductForm: React.FC<ProductFormProps> = ({
   _id,
@@ -23,6 +24,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   price: existingPrice,
   images: existingImages,
   category: existingCategory,
+  properties: existingproperties,
   mutateFetchedProduct,
 }) => {
   const [name, setName] = useState(existingName || '');
@@ -31,13 +33,22 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const [images, setImages] = useState(existingImages || []);
   const [category, setCategory] = useState(existingCategory || '');
   const [isUploading, setIsUploading] = useState(false);
-  const [properties, setProperties] = useState({});
+  const [productProperties, setProductProperties] = useState<
+    Record<string, any>
+  >(existingproperties || {});
   const router = useRouter();
 
   const { data: fetchedCategories = [] } = useCategories();
 
   const handleSubmit = useCallback(async () => {
-    const data = { name, description, price, images, category };
+    const data = {
+      name,
+      description,
+      price,
+      images,
+      category,
+      properties: productProperties,
+    };
 
     try {
       if (_id) {
@@ -100,6 +111,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
     [images]
   );
 
+  const changeProductProp = (propName: string, value: string) => {
+    setProductProperties((prev) => {
+      const newProductProps: Record<string, any> = { ...prev };
+      newProductProps[propName] = value;
+      return newProductProps;
+    });
+  };
+
   const propertiesToFill = [];
   if (fetchedCategories.length > 0 && category) {
     let selectedCategory = fetchedCategories.find(
@@ -149,7 +168,12 @@ const ProductForm: React.FC<ProductFormProps> = ({
             className=" flex flex-row justify-start items-center gap-2"
           >
             <div>{property.name}</div>
-            <select name="" id="">
+            <select
+              value={productProperties[property.name]}
+              onChange={(event) =>
+                changeProductProp(property.name, event.target.value)
+              }
+            >
               {property.value.map((v: string, index: number) => (
                 <option key={index} value={v}>
                   {v}

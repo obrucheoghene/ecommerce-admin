@@ -11,7 +11,7 @@ export default async function handler(
   await mongooseConnect();
 
   if (method === 'POST') {
-    const { name, price, description, images, category } = req.body;
+    const { name, price, description, images, category, properties } = req.body;
 
     try {
       const product = await createProduct({
@@ -20,6 +20,7 @@ export default async function handler(
         description,
         images,
         category,
+        properties,
       });
       res.status(200).json(product);
     } catch (error) {
