@@ -6,12 +6,16 @@ import {
   updateCategoryById,
 } from '@/models/category';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth';
+import { authOptions, isAdminRequest } from '../auth/[...nextauth]';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   await mongooseConnect();
+
+  await isAdminRequest(req, res);
 
   const { method } = req;
   const { categoryId } = req.query;

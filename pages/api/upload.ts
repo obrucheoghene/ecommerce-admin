@@ -3,12 +3,15 @@ import multiparty from 'multiparty';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
 import mime from 'mime-types';
+import { isAdminRequest } from './auth/[...nextauth]';
 
 const bucketName = 'ecommerce-image-store';
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  await isAdminRequest(req, res);
+
   const form = new multiparty.Form();
 
   form.parse(req, async (err, fields, files) => {

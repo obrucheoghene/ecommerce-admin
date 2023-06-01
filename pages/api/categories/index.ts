@@ -6,6 +6,7 @@ import {
   getCategoryByName,
 } from '@/models/category';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { isAdminRequest } from '../auth/[...nextauth]';
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,6 +15,7 @@ export default async function handler(
   const { method } = req;
 
   await mongooseConnect();
+  await isAdminRequest(req, res);
 
   if (method !== 'POST' && method !== 'GET') {
     return res.status(400).end();
