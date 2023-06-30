@@ -13,7 +13,10 @@ import SidebarLogo from './SidebarLogo';
 import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 
-const Sidebar = () => {
+interface SidebarProps {
+  show: boolean
+}
+const Sidebar: React.FC<SidebarProps> = ({show}) => {
   const router = useRouter();
   const { pathname } = router;
   const items = [
@@ -55,7 +58,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="text-white pl-4">
+    <aside className={`${show? "left-0" : "-left-full "} text-neutral-700 pl-4 fixed h-full w-full md:static md:w-auto bg-gray-200`}>
       <SidebarLogo />
 
       <nav className=" flex flex-col space-y-2 ">
