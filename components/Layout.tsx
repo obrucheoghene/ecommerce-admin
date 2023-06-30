@@ -1,14 +1,18 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Sidebar from '@/components/Sidebar';
+import Header from './Header';
+import { useState } from 'react';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 export default function Layout({ children }: LayoutProps) {
   const { data: session } = useSession();
+  const [show, setShow] = useState(false)
+
   if (!session) {
     return (
-      <div className=" bg-blue-900 w-screen h-screen flex items-center">
+      <div className=" bg-gray-200 w-screen h-screen flex items-center">
         <div className="text-center w-full">
           <button
             onClick={() => signIn('google')}
@@ -21,9 +25,10 @@ export default function Layout({ children }: LayoutProps) {
     );
   }
   return (
-    <div className=" bg-blue-900 min-h-screen flex ">
-      <Sidebar />
+    <div className=" bg-gray-200 min-h-screen flex ">
+      <Sidebar show={show} />
       <div className=" bg-white flex-grow ml-0 m-2 rounded-lg text-black p-4">
+        <Header setShow={setShow} />
         {children}
       </div>
     </div>
