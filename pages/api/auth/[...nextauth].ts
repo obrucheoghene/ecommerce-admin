@@ -7,6 +7,7 @@ import GoogleProvider from 'next-auth/providers/google';
 
 const adminEmails = ['wilfredcloudspace@gmail.com'];
 export const authOptions = {
+  adapter: MongoDBAdapter(clientPromise),
   providers: [
     // OAuth authentication providers...
 
@@ -16,10 +17,9 @@ export const authOptions = {
     }),
     // Passwordless / email sign in
   ],
-  adapter: MongoDBAdapter(clientPromise),
 
   callbacks: {
-    session: ({ session, token, user }) => {
+    session: ({ session }: any) => {
       if (adminEmails.includes(session?.user?.email as string)) {
         return session;
       } else {
